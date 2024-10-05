@@ -1,0 +1,26 @@
+body {
+    background: #240750;
+    color: #577B8D;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    color: #344C64;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+button {
+    background: #57A6A1;
+    color: #577B8D;
+    border: none;
+}

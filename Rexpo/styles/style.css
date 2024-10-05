@@ -1,0 +1,203 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--txt-color-1);
+    background: var(--dark-bg);
+}
+
+header {
+    padding-left: 20px;
+    color: var(--txt-color-2);
+    background: var(--dark-bg);
+    margin-bottom: -20px;
+}
+
+main
+{
+    flex-grow: 1;
+    display: block;
+}
+
+footer {
+    padding: 20px;
+    color: var(--txt-color-2);
+    background: var(--dark-bg);
+    margin-top: auto;
+}
+
+section
+{
+    background: var(--light-bg);
+    padding-left: 20px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: 1rem;
+}
+
+h1, h2, h3
+{
+    color: var(--txt-color-2);
+    line-height: 1.1;
+}
+
+h1 .title
+{
+    background-image: url("imgs/MyReptileFamilyLogo.png");
+    background-size: 300px;
+}
+
+ul.BasePages {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+li {
+    display: inline-block;
+    background-color: var(--dark-bg);
+    border-radius: 3px;
+    padding: 2px;
+}
+
+li:hover {
+    filter: brightness(80%);
+}
+
+li:first-child
+{
+    margin-left: -2rem;
+}
+
+li:last-child
+{
+    margin-right: 5rem;
+}
+
+a{
+    text-decoration: none;
+    color: var(--txt-color-2)
+}
+
+.ThemeRadio
+{
+    margin-right: 1.5rem;
+}
+
+.ThemeRadio:last-child
+{
+    margin-right: -1.5rem;
+}
+
+button {
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: var(--txt-color-1);
+    background: var(--dark-bg);
+}
+
+.visually-hidden
+{
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.BasePages
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.color-picker > fieldset
+{
+    border: 2px solid var(--radio-color);
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    width: fit-content;
+    background: var(--light-bg);
+    padding: 1rem 3rem;
+    margin-inline: auto;
+    border-radius: 0 0 1rem 1rem;
+    align-items: center;
+}
+
+.color-picker input[type="radio"]
+{
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    outline: 3px solid var(--radio-color);
+    outline-offset: 3px;
+    border-radius: 50%;
+}
+
+.color-picker input[type="radio"]:checked {
+    background-color: var(--radio-color);
+}
+
+.Light,
+.color-picker input[type="radio"]#Light {
+    --radio-color: #626F47;
+}
+
+.Dark,
+.color-picker input[type="radio"]#Dark {
+    --radio-color: #697565;
+}
+
+.Blue,
+.color-picker input[type="radio"]#Blue {
+    --radio-color: #424242;
+}
+
+.DarkBlue,
+.color-picker input[type="radio"]#DarkBlue {
+    --radio-color: #240750;
+}
+
+:root:has(#Light:checked)
+{
+    --txt-color-1: #F2EED7;
+    --txt-color-2: #FEFAE0;
+    --light-bg: #798645;
+    --dark-bg: #626F47;
+}
+
+:root:has(#Dark:checked) {
+    --txt-color-1: #ECDFCC;
+    --txt-color-2: #3C3D37;
+    --light-bg: #181C14;
+    --dark-bg: #697565;
+}
+
+:root:has(#Blue:checked) {
+    --txt-color-1: #F5F5F5;
+    --txt-color-2: #48CFCB;
+    --light-bg: #229799;
+    --dark-bg: #424242;
+}
+
+:root:has(#DarkBlue:checked) {
+    --txt-color-1: #344C64;
+    --txt-color-2: #57A6A1;
+    --light-bg: #57A6A1;
+    --dark-bg: #240750;
+}
