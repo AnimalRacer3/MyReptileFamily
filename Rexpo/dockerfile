@@ -1,0 +1,11 @@
+# Pulls image
+FROM python:3.9.13
+
+# Compiles files
+ADD main.py .
+
+# Adds packages
+RUN pip install flask flask-login flask-sqlalchemy
+
+# Run
+CMD [ "python", "./main.py"]
