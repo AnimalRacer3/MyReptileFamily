@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reptile Family - Collection</title>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My Reptile Family</h1>
+        <nav id="Navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="collection.html">My Collection</a></li>
+                <li><a href="sale.html">Buy & Sell</a></li>
+                <li><a href="friends.html">Friends</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Reptile Family Tree</h2>
+        <!-- Family tree visualizer, showing parent-child relationships -->
+        <div id="family-tree">
+            <!-- Dynamically generated family tree nodes -->
+        </div>
+
+        <h2>Add a New Reptile</h2>
+        <form id="add-reptile-form">
+            <label for="name">Reptile Name:</label>
+            <input type="text" id="name" required>
+            <label for="species">Species:</label>
+            <input type="text" id="species" required>
+            <label for="morph">Morph:</label>
+            <input type="text" id="morph">
+            <label for="birthdate">Birthdate:</label>
+            <input type="date" id="birthdate">
+            <button type="button" onclick="addReptile()">Add to Family Tree</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Reptile Family</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

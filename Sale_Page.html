@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase - Tame Blue Tail Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My Reptile Family</h1>
+        <nav id="Navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="collection.html">My Collection</a></li>
+                <li><a href="sale.html">Buy & Sell</a></li>
+                <li><a href="friends.html">Friends</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="purchase-container">
+        <div class="purchase-details">
+            <div class="image-gallery">
+                <img src="img/BTM1.jpg" alt="Tame Blue Tail Monitor" id="main-image">
+                <div class="thumbnail-container">
+                    <img src="img/BTM2.jpg" alt="Thumbnail 1" class="thumbnail" onclick="changeImage('BTM2.jpg')">
+                    <img src="img/BTM3.jpg" alt="Thumbnail 2" class="thumbnail" onclick="changeImage('BTM3.jpg')">
+                    <img src="img/BTM4.jpg" alt="Thumbnail 3" class="thumbnail" onclick="changeImage('BTM4.jpg')">
+                </div>
+            </div>
+
+            <div class="reptile-info">
+                <h2>Tame Blue Tail Monitor</h2>
+                <p class="price">$599.00</p>
+                <button class="btn inquire-btn">Inquire to Buy</button>
+
+                <ul class="details-list">
+                    <li><strong>Sex:</strong> ♂</li>
+                    <li><strong>Origin:</strong> Self Produced</li>
+                    <li><strong>Diet:</strong> Insectivore</li>
+                    <li><strong>Shipping:</strong> $49.00 (Domestic)</li>
+                    <li><strong>Shipping Details:</strong> Regional Shipping</li>
+                    <li><strong>Animal ID:</strong> 24814</li>
+                    <li><strong>First Posted:</strong> 10/05/24</li>
+                    <li><strong>Last Updated:</strong> 10/05/24</li>
+                </ul>
+
+                <div class="seller-info">
+                    <h3>BSR Auctions</h3>
+                    <p>5.0 ★★★★★ (30 Reviews)</p>
+                    <p>Location: Miami, Florida</p>
+                    <button class="btn contact-btn">View Other Contacts</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Reptile Family</p>
+    </footer>
+
+    <script>
+        function changeImage(imageSrc) {
+            document.getElementById("main-image").src = imageSrc;
+        }
+    </script>
+</body>
+</html>
