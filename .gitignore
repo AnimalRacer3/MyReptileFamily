@@ -1,0 +1,47 @@
+# Build Folders
+bin/
+obj/
+# User-Specific Files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+# Logs
+*.log
+logs/
+# Visual Studio
+.vscode/
+.vs/
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+# ASP.NET Core
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+# Dependency Directories
+node_modules/
+wwwroot/lib/
+# Generated Files
+*.generated.cs
+*.designer.cs
+# Packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+# OS-Specific Files
+.DS_Store
+Thumbs.db
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.swp
+# Rider IDE
+.idea/
+*.iml
+# Git-Specific
+*.orig
+*.rej
+*.patch
