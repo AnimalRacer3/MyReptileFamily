@@ -1,5 +1,5 @@
-﻿using MyReptileFamilyAPI.Enum;
-using MyReptileFamilyAPI.Models;
+﻿using MyReptileFamilyAPI.Models;
+using MyReptileFamilyLibrary.Records;
 using MyReptileFamilyLibrary.SQL.Abstractions;
 using MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
 using MySqlConnector;
@@ -13,8 +13,8 @@ public class CreateOwnerSQL(RegisterOwner Owner) : IDapperSQL
                          VALUE (@username, @email, @passwordHash, @visibility, @birthday, @currentIntent, @country, @postalCode, @street1, @street2, @city, @state)
                          """;
 
-    public MySqlParameter[] Parameters =>
-    [
+    public DapperParameter DapperParameter =>
+        new([
         Owner.Username.ToSqlParameter("@username", 16),
         Owner.Email.ToSqlParameter("@email", 64),
         Owner.PasswordHash.ToSqlParameter("@passwordHash", 255),
@@ -27,5 +27,5 @@ public class CreateOwnerSQL(RegisterOwner Owner) : IDapperSQL
         Owner.Street2.ToSqlParameter("@street2", 64),
         Owner.City.ToSqlParameter("@city", 128),
         Owner.State.ToSqlParameter("@state", 64)
-    ];
+    ]);
 }

@@ -1,4 +1,5 @@
-﻿using BCryptNet = BCrypt.Net.BCrypt;
+﻿using BCrypt.Net;
+using BCryptNet = BCrypt.Net.BCrypt;
 using MyReptileFamilyAPI.Enum;
 
 namespace MyReptileFamilyAPI.Models;
@@ -34,7 +35,7 @@ public record RegisterOwner(
                                               !string.IsNullOrWhiteSpace(State) &&
                                               !string.IsNullOrWhiteSpace(Country);
 
-    public string PasswordHash => BCryptNet.EnhancedHashPassword(Password);
+    public string PasswordHash => BCryptNet.EnhancedHashPassword(Password, HashType.SHA512, 15);
     
     public bool BasicIsValid(out RegisterUserResult ReasonOfResult)
     {

@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using MyReptileFamilyLibrary.Records;
 
 namespace MyReptileFamilyLibrary.SQL.Abstractions;
 
@@ -17,5 +17,5 @@ public interface IDapperQuery<TReturnType>
     /// <summary>
     ///     The parameters that will populate the provided <see cref="SQL" /> with.
     /// </summary>
-    List<MySqlParameter> Parameters { get; }
+    DapperParameter DapperParameter { get; }
 }

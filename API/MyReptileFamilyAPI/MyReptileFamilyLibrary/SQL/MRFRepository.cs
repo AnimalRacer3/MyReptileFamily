@@ -20,7 +20,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] QueryAsync: {Query}", nameof(MRFRepository), Query.GetType().Name);
-        var _queryResult = await SQLConnection.QueryAsync<TReturnType>(Query.SQL, Query.Parameters, Transaction);
+        var _queryResult = await SQLConnection.QueryAsync<TReturnType>(Query.SQL, Query.DapperParameter.Parameters, Transaction);
         return _queryResult.ToList();
     }
 
@@ -29,7 +29,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] QueryFirstAsync: {Query}", nameof(MRFRepository), Query.GetType().Name);
-        var _queryResult = await SQLConnection.QueryFirstAsync<TReturnType>(Query.SQL, Query.Parameters, Transaction);
+        var _queryResult = await SQLConnection.QueryFirstAsync<TReturnType>(Query.SQL, Query.DapperParameter.Parameters, Transaction);
         return _queryResult;
     }
 
@@ -38,7 +38,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] QueryFirstOrDefaultAsync: {Query}", nameof(MRFRepository), Query.GetType().Name);
-        var _queryResult = await SQLConnection.QueryFirstOrDefaultAsync<TReturnType>(Query.SQL, Query.Parameters, Transaction);
+        var _queryResult = await SQLConnection.QueryFirstOrDefaultAsync<TReturnType>(Query.SQL, Query.DapperParameter.Parameters, Transaction);
         return _queryResult ?? default;
     }
 
@@ -47,7 +47,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] QuerySingleAsync: {Query}", nameof(MRFRepository), Query.GetType().Name);
-        var _queryResult = await SQLConnection.QuerySingleAsync<TReturnType>(Query.SQL, Query.Parameters, Transaction);
+        var _queryResult = await SQLConnection.QuerySingleAsync<TReturnType>(Query.SQL, Query.DapperParameter.Parameters, Transaction);
         return _queryResult;
     }
 
@@ -56,7 +56,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] QuerySingleOrDefaultAsync: {Query}", nameof(MRFRepository), Query.GetType().Name);
-        var _queryResult = await SQLConnection.QuerySingleOrDefaultAsync<TReturnType>(Query.SQL, Query.Parameters, Transaction);
+        var _queryResult = await SQLConnection.QuerySingleOrDefaultAsync<TReturnType>(Query.SQL, Query.DapperParameter.Parameters, Transaction);
         return _queryResult ?? default;
     }
 
@@ -65,7 +65,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] ExecuteScalarAsync: {Query}", nameof(MRFRepository), Query.GetType().Name);
-        return await SQLConnection.ExecuteScalarAsync<TReturnType>(Query.SQL, Query.Parameters, Transaction);
+        return await SQLConnection.ExecuteScalarAsync<TReturnType>(Query.SQL, Query.DapperParameter.Parameters, Transaction);
     }
 
     /// <inheritdoc />
@@ -73,7 +73,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] ExecuteAsync: {SQL}", nameof(MRFRepository), SQL.GetType().Name);
-        return await SQLConnection.ExecuteAsync(SQL.SQL, SQL.Parameters, Transaction);
+        return await SQLConnection.ExecuteAsync(SQL.SQL, SQL.DapperParameter.Parameters, Transaction);
     }
 
     /// <inheritdoc />
@@ -81,7 +81,7 @@ public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString
         IMySQLConnection SQLConnection, IDbTransaction? Transaction = null)
     {
         Logger.LogDebug("[{Repository}] ExecuteStoredProcedureAsync: {Procedure}", nameof(MRFRepository), StoredProcedure.GetType().Name);
-        await SQLConnection.ExecuteAsync(StoredProcedure.Name, StoredProcedure.Parameters,
+        await SQLConnection.ExecuteAsync(StoredProcedure.Name, StoredProcedure.DapperParameter.Parameters,
             commandType: CommandType.StoredProcedure, transaction: Transaction);
     }
 

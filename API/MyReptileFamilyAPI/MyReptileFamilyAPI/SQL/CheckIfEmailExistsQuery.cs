@@ -1,6 +1,6 @@
-﻿using MyReptileFamilyLibrary.SQL.Abstractions;
+﻿using MyReptileFamilyLibrary.Records;
+using MyReptileFamilyLibrary.SQL.Abstractions;
 using MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
-using MySqlConnector;
 
 namespace MyReptileFamilyAPI.SQL;
 
@@ -9,9 +9,9 @@ public class CheckIfEmailExistsQuery(string Email) : IDapperQuery<bool>
     public string SQL => """
                          SELECT EXISTS (
                              SELECT 1 
-                             FROM Owner 
-                             WHERE Email = @username
+                             FROM Owners
+                             WHERE Email = @email
                              );
                          """;
-    public List<MySqlParameter> Parameters => [Email.ToSqlParameter("@email", 64)];
+    public DapperParameter DapperParameter => new (Email.ToSqlParameter("@email", 64));
 }

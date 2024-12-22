@@ -1,5 +1,4 @@
-﻿using MySqlConnector;
-using System.Data;
+﻿using System.Data;
 
 namespace MyReptileFamilyLibrary.SQL.Abstractions;
 

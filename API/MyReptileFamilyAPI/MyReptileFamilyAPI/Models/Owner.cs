@@ -1,7 +1,4 @@
 ﻿using MyReptileFamilyAPI.Enum;
-using MyReptileFamilyAPI.SQL;
-using MyReptileFamilyLibrary.SQL;
-using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace MyReptileFamilyAPI.Models;
 
@@ -10,11 +7,6 @@ public record Owner(
     string? Email,
     string Password)
 {
-    public async Task<bool> PasswordValidation(IMySQLConnection SqlConn, IMRFRepository Repo)
-    {
-        string? _passwordHash = await Repo.QueryFirstOrDefaultAsync(new GetPasswordHashQuery(Username, Email), SqlConn);
-        return BCryptNet.EnhancedVerify(Password, _passwordHash);
-    }
     public bool BasicIsValid(out RegisterUserResult ReasonOfResult)
     {
         // Check if password is valid and within a character limit
@@ -24,11 +16,13 @@ public record Owner(
             return false;
         }
         // Check if the username is within a character limit and only contains letter numbers and '_'
-        if (string.IsNullOrWhiteSpace(Username) || !ComponentRegularExpressions.UsernameRegex().IsMatch(Username) 
-            || string.IsNullOrWhiteSpace(Email) || !ComponentRegularExpressions.EmailRegex().IsMatch(Email))
+        if (string.IsNullOrWhiteSpace(Username) || !ComponentRegularExpressions.UsernameRegex().IsMatch(Username))
         {
-            ReasonOfResult = RegisterUserResult.InvalidUsername;
-            return false;
+            if (string.IsNullOrWhiteSpace(Email) || !ComponentRegularExpressions.EmailRegex().IsMatch(Email))
+            {
+                ReasonOfResult = RegisterUserResult.InvalidUsername;
+                return false;
+            }
         }
 
         ReasonOfResult = RegisterUserResult.Success;

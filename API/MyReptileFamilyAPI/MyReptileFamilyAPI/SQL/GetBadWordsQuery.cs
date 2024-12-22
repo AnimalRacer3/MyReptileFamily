@@ -1,4 +1,5 @@
-﻿using MyReptileFamilyLibrary.SQL.Abstractions;
+﻿using MyReptileFamilyLibrary.Records;
+using MyReptileFamilyLibrary.SQL.Abstractions;
 using MySqlConnector;
 
 namespace MyReptileFamilyAPI.SQL;
@@ -10,5 +11,5 @@ public class GetBadWordsQuery : IDapperQuery<string>
                             BadWords 
                          FROM BadWords
                          """;
-    public List<MySqlParameter> Parameters => [];
+    public DapperParameter DapperParameter => new();
 }

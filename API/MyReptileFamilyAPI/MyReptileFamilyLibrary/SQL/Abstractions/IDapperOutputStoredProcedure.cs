@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using MyReptileFamilyLibrary.Records;
 
 namespace MyReptileFamilyLibrary.SQL.Abstractions;
 
@@ -19,5 +19,5 @@ public interface IDapperOutputStoredProcedure<TOutputType>
     /// <summary>
     /// The parameters of the stored procedure
     /// </summary>
-    List<MySqlParameter> Parameters { get; }
+    DapperParameter DapperParameter { get; }
 }

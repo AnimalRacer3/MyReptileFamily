@@ -1,4 +1,5 @@
-﻿using MyReptileFamilyLibrary.SQL.Abstractions;
+﻿using MyReptileFamilyLibrary.Records;
+using MyReptileFamilyLibrary.SQL.Abstractions;
 using MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
 using MySqlConnector;
 
@@ -9,9 +10,9 @@ public class CheckIfUserExistsQuery(string Username) : IDapperQuery<bool>
     public string SQL => """
                          SELECT EXISTS (
                              SELECT 1 
-                             FROM Owner 
+                             FROM Owners
                              WHERE Username = @username
                              );
                          """;
-    public List<MySqlParameter> Parameters => [Username.ToSqlParameter("@username", 16),];
+    public DapperParameter DapperParameter => new([Username.ToSqlParameter("@username", 16)]);
 }

@@ -4,7 +4,6 @@ using MyReptileFamilyAPI.Enum;
 using MyReptileFamilyAPI.Models;
 using MyReptileFamilyAPI.SQL;
 using MyReptileFamilyLibrary.SQL;
-using MySqlConnector;
 
 namespace MyReptileFamilyAPI.Handlers;
 
@@ -28,9 +27,9 @@ public class Register(DbSettings DbSettings, IMRFRepository Repo) : IRegister
             // Check if the username contains any prohibited words
             if (prohibitedWords.Any(word => Regex.IsMatch(Owner.Username, $@"\b{Regex.Escape(word)}\b", RegexOptions.IgnoreCase)))
                 return Results.BadRequest(RegisterUserResult.InvalidUsername);
-            if (!await Repo.ExecuteScalarAsync(new CheckIfUserExistsQuery(Owner.Username), sqlConn))
+            if (await Repo.ExecuteScalarAsync(new CheckIfUserExistsQuery(Owner.Username), sqlConn))
                 return Results.Conflict("A user with this username already exists");
-            if (!await Repo.ExecuteScalarAsync(new CheckIfEmailExistsQuery(Owner.Email), sqlConn))
+            if (await Repo.ExecuteScalarAsync(new CheckIfEmailExistsQuery(Owner.Email), sqlConn))
                 return Results.Conflict("A user with this email already exists");
 
             await Repo.ExecuteAsync(new CreateOwnerSQL(Owner), sqlConn);
