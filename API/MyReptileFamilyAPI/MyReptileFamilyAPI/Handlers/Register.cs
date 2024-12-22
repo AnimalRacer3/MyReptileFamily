@@ -4,11 +4,11 @@ using MyReptileFamilyAPI.Enum;
 using MyReptileFamilyAPI.Models;
 using MyReptileFamilyAPI.SQL;
 using MyReptileFamilyLibrary.SQL;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace MyReptileFamilyAPI.Handlers;
 
-public class Register(DbSettings DbSettings, OwnerSettings OSettings, IMRFRepository Repo) : IRegister
+public class Register(DbSettings DbSettings, IMRFRepository Repo) : IRegister
 {
     /// <summary>
     /// Adds a user into the database
@@ -18,9 +18,9 @@ public class Register(DbSettings DbSettings, OwnerSettings OSettings, IMRFReposi
     /// <returns></returns>
     public async Task<IResult> RegisterUserAsync(RegisterOwner Owner, CancellationToken CancellationToken)
     {
-        if (!Owner.BasicIsValid(OSettings.UsernameRange, OSettings.PasswordRange, out RegisterUserResult result)) return Results.BadRequest(result);
+        if (!Owner.BasicIsValid(out RegisterUserResult result)) return Results.BadRequest(result);
         // Connecting to DB to finish validation
-        await using (IMySQLConnection sqlConn = Repo.CreateMySQLConnection(DbSettings.ConnectionString))
+        await using (IMySQLConnection sqlConn = Repo.CreateMySQLConnection())
         {
             await sqlConn.OpenAsync(CancellationToken);
 

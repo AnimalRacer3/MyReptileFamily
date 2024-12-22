@@ -2,16 +2,18 @@
 using Microsoft.Extensions.Logging;
 using Dapper;
 using System.Data;
-using MySql.Data.MySqlClient;
 using System.Data.Common;
+using MyReptileFamilyLibrary.AppSettings;
+using MySqlConnector;
 
 namespace MyReptileFamilyLibrary.SQL;
 
-public class MRFRepository(ILogger<MRFRepository> Logger) : IMRFRepository
+public class MRFRepository(ILogger<MRFRepository> Logger, IMySQLConnectionString _p_Settings) : IMRFRepository
 {
+    private readonly string _defaultConnectionString = _p_Settings.MySQLConnectionString;
     /// <inheritdoc />
-    public IMySQLConnection CreateMySQLConnection(string SQLConnectionString) => 
-        new MySQLConnectionWrapper(new MySqlConnection(SQLConnectionString));
+    public IMySQLConnection CreateMySQLConnection(string? SQLConnectionString) => 
+        new MySQLConnectionWrapper(new MySqlConnection(SQLConnectionString ?? _defaultConnectionString));
 
     /// <inheritdoc />
     public async Task<List<TReturnType>> QueryAsync<TReturnType>(IDapperQuery<TReturnType> Query,

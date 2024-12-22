@@ -1,5 +1,5 @@
 ﻿using MyReptileFamilyLibrary.SQL.Abstractions;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace MyReptileFamilyLibrary.SQL;
 

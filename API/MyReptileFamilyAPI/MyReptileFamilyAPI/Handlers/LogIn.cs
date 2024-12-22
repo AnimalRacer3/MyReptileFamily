@@ -6,13 +6,13 @@ using MySqlX.XDevAPI.Common;
 
 namespace MyReptileFamilyAPI.Handlers;
 
-public class LogIn(DbSettings DbSettings, OwnerSettings OSettings, IMRFRepository Repo) : ILogIn
+public class LogIn(DbSettings DbSettings, IMRFRepository Repo) : ILogIn
 {
     public async Task<IResult> UserLogIn(Owner User, CancellationToken Cancellation)
     {
-        if (!User.BasicIsValid(OSettings.UsernameRange, OSettings.PasswordRange, out var reason)) return Results.BadRequest("Username is invalid");
+        if (!User.BasicIsValid(out var reason)) return Results.BadRequest(reason.ToString());
 
-        await using (IMySQLConnection sqlConn = Repo.CreateMySQLConnection(DbSettings.ConnectionString))
+        await using (IMySQLConnection sqlConn = Repo.CreateMySQLConnection())
         {
             await sqlConn.OpenAsync(Cancellation);
             if (await User.PasswordValidation(sqlConn, Repo)) return Results.Unauthorized();

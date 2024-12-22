@@ -2,7 +2,7 @@
 using MyReptileFamilyAPI.Models;
 using MyReptileFamilyLibrary.SQL.Abstractions;
 using MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace MyReptileFamilyAPI.SQL;
 

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using MyReptileFamilyLibrary.SQL.Abstractions;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace MyReptileFamilyLibrary.SQL;
 
@@ -17,7 +17,7 @@ public interface IMRFRepository
     ///     Creates a <see cref="MySqlConnection" /> instance. Best used in a using statement
     ///     (e.g. "await using SqlConnection _connection = CreateSqlConnection();").
     /// </summary>
-    IMySQLConnection CreateMySQLConnection(string ConnectionString);
+    IMySQLConnection CreateMySQLConnection(string? ConnectionString = null);
 
     /// <summary>
     ///     Run basic queries against the database

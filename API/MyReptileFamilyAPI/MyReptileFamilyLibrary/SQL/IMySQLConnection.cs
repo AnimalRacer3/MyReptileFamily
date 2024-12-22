@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace MyReptileFamilyLibrary.SQL;
 

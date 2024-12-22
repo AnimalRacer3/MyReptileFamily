@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyReptileFamilyLibrary.AppSettings;
+using MyReptileFamilyLibrary.SQL;
 
 namespace MyReptileFamilyAPI.AppSettings;
 
-public class DbSettings
+public class DbSettings : IMySQLConnectionString
 {
-    [Required] public string Server = "";
-    [Required] public string Database = "";
-    [Required] public string Username = "";
-    [Required] public string Password = "";
+    [Required] public string Server { get; set; } = "";
+    public int Port { get; set; } = 3306;
+    [Required] public string Database { get; set; } = "";
+    [Required] public string Username { get; set; } = "";
+    [Required] public string Password { get; set; } = "";
 
-    public string ConnectionString => $"Server={Server};Database={Database};User={Username};Password={Password}";
+    public string MySQLConnectionString => $"Server={Server};Port={Port};Uid={Username};pwd=\"{Password}\";Database={Database}";
 }

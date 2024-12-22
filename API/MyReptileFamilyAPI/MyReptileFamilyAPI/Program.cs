@@ -2,30 +2,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyReptileFamilyAPI.AppSettings;
 using MyReptileFamilyAPI.Handlers;
-using MyReptileFamilyLibrary.Models;
+using MyReptileFamilyAPI.Models;
+using MyReptileFamilyLibrary.Builder;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton((IServiceProvider Provider) => Provider.GetService<IOptions<DbSettings>>().Value);
+var builder = WebBuilder.Create();
+builder.WithSettings<DbSettings>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-ILogIn logIn = new LogIn();
-IRegister register = new Register();
+var app = builder.BuildAndValidate();
 
 app.UseHttpsRedirection();
 
-app.MapPost("/register", async ([FromBody] User user, CancellationToken _p_CancellationToken) => await register.RegisterUser(user));
+app.MapPost("/register", async ([FromBody] RegisterOwner User, CancellationToken CancellationToken) => await app.Services.GetRequiredService<IRegister>().RegisterUserAsync(User, CancellationToken));
 // Make the Username switchable with the email
-app.MapPost("/login", async ([FromBody]User user, CancellationToken _p_CancellationToken) => await logIn.UserLogIn(user));
+app.MapPost("/login", async ([FromBody]Owner User, CancellationToken CancellationToken) => await app.Services.GetRequiredService<ILogIn>().UserLogIn(User, CancellationToken));
 app.MapGet("/sale", async (int pageNo, int count, string reptileType, CancellationToken _p_CancellationToken) => "HOME");
 
 app.Run();
