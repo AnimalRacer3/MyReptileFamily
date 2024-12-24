@@ -8,11 +8,11 @@ internal static class HttpClientBuilderInternalExtensions
     ///     If you want redirects to not happen for your Refit client, this method will
     ///     try to set <see cref="HttpClientHandler.AllowAutoRedirect" /> to false.
     /// </summary>
-    internal static IHttpClientBuilder DisableAutoRedirect(this IHttpClientBuilder _p_HttpClientBuilder)
+    internal static IHttpClientBuilder DisableAutoRedirect(this IHttpClientBuilder HttpClientBuilder)
     {
-        return _p_HttpClientBuilder.ConfigurePrimaryHttpMessageHandler((_p_Handler, _) =>
+        return HttpClientBuilder.ConfigurePrimaryHttpMessageHandler((Handler, _) =>
         {
-            switch (_p_Handler)
+            switch (Handler)
             {
                 // When getting bearer tokens, the actual client handler is one layer deeper
                 case DelegatingHandler { InnerHandler: HttpClientHandler _inner }:

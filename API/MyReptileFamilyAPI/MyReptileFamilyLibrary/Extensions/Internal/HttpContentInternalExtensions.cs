@@ -4,7 +4,7 @@ namespace MyReptileFamilyLibrary.Extensions.Internal;
 
 internal static class HttpContentInternalExtensions
 {
-    private static readonly string[] _TextBasedTypes =
+    private static readonly string[] _textBasedTypes =
     [
         "html",
         "text",
@@ -14,28 +14,28 @@ internal static class HttpContentInternalExtensions
         "x-www-form-urlencoded"
     ];
 
-    internal static bool ContentIsTextBased(this HttpRequestMessage _p_Request)
+    internal static bool ContentIsTextBased(this HttpRequestMessage Request)
     {
-        return _p_Request.Content.ContentIsTextBased();
+        return Request.Content.ContentIsTextBased();
     }
 
-    internal static bool ContentIsTextBased(this HttpResponseMessage _p_Response)
+    internal static bool ContentIsTextBased(this HttpResponseMessage Response)
     {
-        return _p_Response.Content.ContentIsTextBased();
+        return Response.Content.ContentIsTextBased();
     }
 
-    private static bool ContentIsTextBased(this HttpContent? _p_Content)
+    private static bool ContentIsTextBased(this HttpContent? Content)
     {
-        if (_p_Content is null) return false;
-        return _p_Content is StringContent || ContentIsTextBased(_p_Content.Headers) ||
-               ContentIsTextBased(_p_Content.Headers);
+        if (Content is null) return false;
+        return Content is StringContent || ContentIsTextBased(Content.Headers) ||
+               ContentIsTextBased(Content.Headers);
     }
 
-    private static bool ContentIsTextBased(this HttpHeaders _p_Headers)
+    private static bool ContentIsTextBased(this HttpHeaders Headers)
     {
-        if (!_p_Headers.TryGetValues("Content-Type", out var _values)) return false;
+        if (!Headers.TryGetValues("Content-Type", out IEnumerable<string>? _values)) return false;
 
-        var _header = string.Join(" ", _values);
-        return _TextBasedTypes.Any(_p_T => _header.Contains(_p_T, StringComparison.InvariantCultureIgnoreCase));
+        string _header = string.Join(" ", _values);
+        return _textBasedTypes.Any(T => _header.Contains(T, StringComparison.InvariantCultureIgnoreCase));
     }
 }

@@ -15,15 +15,14 @@ public record Owner(
             ReasonOfResult = RegisterUserResult.InvalidPassword;
             return false;
         }
+
         // Check if the username is within a character limit and only contains letter numbers and '_'
         if (string.IsNullOrWhiteSpace(Username) || !ComponentRegularExpressions.UsernameRegex().IsMatch(Username))
-        {
             if (string.IsNullOrWhiteSpace(Email) || !ComponentRegularExpressions.EmailRegex().IsMatch(Email))
             {
                 ReasonOfResult = RegisterUserResult.InvalidUsername;
                 return false;
             }
-        }
 
         ReasonOfResult = RegisterUserResult.Success;
         return true;

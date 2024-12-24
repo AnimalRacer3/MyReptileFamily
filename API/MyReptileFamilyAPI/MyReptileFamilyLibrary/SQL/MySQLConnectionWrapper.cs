@@ -11,34 +11,64 @@ public class MySQLConnectionWrapper(MySqlConnection SQLConnection) : IMySQLConne
     public MySqlConnection SQLConn => SQLConnection;
 
     /// <inheritdoc />
-    public Task OpenAsync(CancellationToken CancellationToken) => SQLConn.OpenAsync(CancellationToken);
+    public Task OpenAsync(CancellationToken CancellationToken)
+    {
+        return SQLConn.OpenAsync(CancellationToken);
+    }
 
     /// <inheritdoc />
-    public ValueTask<MySqlTransaction> BeginDbTransactionAsync() => SQLConn.BeginTransactionAsync();
+    public ValueTask<MySqlTransaction> BeginDbTransactionAsync()
+    {
+        return SQLConn.BeginTransactionAsync();
+    }
 
     /// <inheritdoc />
-    public Task CloseAsync() => SQLConn.CloseAsync();
+    public Task CloseAsync()
+    {
+        return SQLConn.CloseAsync();
+    }
 
     /// <inheritdoc />
-    public void Dispose() => SQLConn.Dispose();
-    
+    public void Dispose()
+    {
+        SQLConn.Dispose();
+    }
+
     /// <inheritdoc />
-    public IDbTransaction BeginTransaction() => SQLConn.BeginTransaction();
-    
+    public IDbTransaction BeginTransaction()
+    {
+        return SQLConn.BeginTransaction();
+    }
+
     /// <inheritdoc />
-    public IDbTransaction BeginTransaction(IsolationLevel _p_IsolationLevel) => SQLConn.BeginTransaction(_p_IsolationLevel);
-    
+    public IDbTransaction BeginTransaction(IsolationLevel IsolationLevel)
+    {
+        return SQLConn.BeginTransaction(IsolationLevel);
+    }
+
     /// <inheritdoc />
-    public void ChangeDatabase(string _p_DatabaseName) => SQLConn.ChangeDatabase(_p_DatabaseName);
-    
+    public void ChangeDatabase(string DatabaseName)
+    {
+        SQLConn.ChangeDatabase(DatabaseName);
+    }
+
     /// <inheritdoc />
-    public void Close() => SQLConn.Close();
-    
+    public void Close()
+    {
+        SQLConn.Close();
+    }
+
     /// <inheritdoc />
-    public IDbCommand CreateCommand() => SQLConn.CreateCommand();
-    
+    public IDbCommand CreateCommand()
+    {
+        return SQLConn.CreateCommand();
+    }
+
     /// <inheritdoc />
-    public void Open() => SQLConn.Open();
+    public void Open()
+    {
+        SQLConn.Open();
+    }
 
     /// <inheritdoc />
     [AllowNull]
@@ -50,12 +80,18 @@ public class MySQLConnectionWrapper(MySqlConnection SQLConnection) : IMySQLConne
 
     /// <inheritdoc />
     public int ConnectionTimeout => SQLConn.ConnectionTimeout;
+
     /// <inheritdoc />
     public string Database => SQLConn.Database;
+
     /// <inheritdoc />
     public ConnectionState State => SQLConn.State;
+
     /// <inheritdoc />
-    public ValueTask DisposeAsync() => SQLConn.DisposeAsync();
+    public ValueTask DisposeAsync()
+    {
+        return SQLConn.DisposeAsync();
+    }
 
     /// <inheritdoc />
     public ISite? Site
@@ -63,6 +99,7 @@ public class MySQLConnectionWrapper(MySqlConnection SQLConnection) : IMySQLConne
         get => SQLConn.Site;
         set => SQLConn.Site = value;
     }
+
     /// <inheritdoc />
     public event EventHandler? Disposed
     {

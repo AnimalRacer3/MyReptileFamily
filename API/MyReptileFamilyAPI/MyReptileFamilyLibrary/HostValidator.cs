@@ -17,28 +17,30 @@ internal class HostValidator
     ///     also validates that Serilog does not throw when logging (i.e. has permissions to write to file);
     ///     also warns of any legacy services in use
     /// </summary>
-    /// <param name="_p_Host">The created <see cref="IHost" /> instance</param>
-    /// <param name="_p_SettingsTypesToValidate">Collection of types that represent settings, to be validated</param>
-    /// <param name="_p_CustomValidator">Custom validation that's invoked upon validation</param>
+    /// <param name="Host">The created <see cref="IHost" /> instance</param>
+    /// <param name="SettingsTypesToValidate">Collection of types that represent settings, to be validated</param>
+    /// <param name="CustomValidator">Custom validation that's invoked upon validation</param>
     /// <exception cref="ApplicationException">Thrown if any validation error occurs</exception>
-    internal static void Validate(IHost _p_Host, IEnumerable<Type> _p_SettingsTypesToValidate, Func<IHost, ILogger, bool> _p_CustomValidator)
+    internal static void Validate(IHost Host, IEnumerable<Type> SettingsTypesToValidate,
+        Func<IHost, ILogger, bool> CustomValidator)
     {
         // Validates Serilog
         EnableSerilogValidation();
-        var _logger = _p_Host.Services.GetRequiredService<ILogger<HostValidator>>();
+        ILogger<HostValidator> _logger = Host.Services.GetRequiredService<ILogger<HostValidator>>();
         _logger.LogDebug("[{Validator}] Beginning validation", nameof(HostValidator));
         SelfLog.Disable();
 
         // Validates all settings
-        var _allSettingsValid = _p_SettingsTypesToValidate.All(_p_T => ValidateSettings(_p_T, _p_Host.Services, _logger));
-        _allSettingsValid = _allSettingsValid && _p_CustomValidator(_p_Host, _logger);
+        bool _allSettingsValid =
+            SettingsTypesToValidate.All(T => ValidateSettings(T, Host.Services, _logger));
+        _allSettingsValid = _allSettingsValid && CustomValidator(Host, _logger);
         if (!_allSettingsValid) throw new HostValidationException("Not all settings were found to be valid");
     }
 
-    private static bool ValidateSettings(Type _p_SettingsToValidate, IServiceProvider _p_Services, ILogger _p_Logger)
+    private static bool ValidateSettings(Type SettingsToValidate, IServiceProvider Services, ILogger Logger)
     {
-        var _optionsType = typeof(IOptions<>).MakeGenericType(_p_SettingsToValidate);
-        var _resolvedService = _p_Services.GetService(_optionsType);
+        Type _optionsType = typeof(IOptions<>).MakeGenericType(SettingsToValidate);
+        object? _resolvedService = Services.GetService(_optionsType);
         if (_resolvedService is not IOptions<object> _options) return true;
         object _settings;
         try
@@ -47,50 +49,50 @@ internal class HostValidator
         }
         catch (Exception _ex)
         {
-            _p_Logger.LogError(_ex, "[{Validator}] [{SettingsClass}] validation error", nameof(HostValidator),
-                _p_SettingsToValidate.Name);
+            Logger.LogError(_ex, "[{Validator}] [{SettingsClass}] validation error", nameof(HostValidator),
+                SettingsToValidate.Name);
             return false;
         }
 
         bool _isValid = true;
         if (_settings is IMySQLConnectionString _settingsWithConnectionString)
-        {
-            _isValid = ValidateConnectionString(_p_Logger, _settingsWithConnectionString.MySQLConnectionString, "SQL connection string", _p_SettingsToValidate.Name)
-                && _isValid;
-        }
+            _isValid = ValidateConnectionString(Logger, _settingsWithConnectionString.MySQLConnectionString,
+                           "SQL connection string", SettingsToValidate.Name)
+                       && _isValid;
         if (_isValid)
-        {
-            _p_Logger.LogDebug("[{Validator}] [{SettingsClass}] Valid", nameof(HostValidator), _p_SettingsToValidate.Name);
-        }
+            Logger.LogDebug("[{Validator}] [{SettingsClass}] Valid", nameof(HostValidator),
+                SettingsToValidate.Name);
         return _isValid;
     }
 
-    private static bool ValidateConnectionString(ILogger _p_Logger, string _p_ConnectionString, string _p_ConnectionStringName, string _p_SettingsName)
+    private static bool ValidateConnectionString(ILogger Logger, string ConnectionString,
+        string ConnectionStringName, string SettingsName)
     {
         try
         {
-            using var _connection = new MySqlConnection(_p_ConnectionString);
+            using MySqlConnection _connection = new MySqlConnection(ConnectionString);
             _connection.Open();
-            _p_Logger.LogDebug("[{Validator}] [{SettingsClass}] {ConnectionStringName} connected successfully",
-                nameof(HostValidator), _p_SettingsName, _p_ConnectionStringName);
+            Logger.LogDebug("[{Validator}] [{SettingsClass}] {ConnectionStringName} connected successfully",
+                nameof(HostValidator), SettingsName, ConnectionStringName);
             return true;
         }
         catch (Exception _ex)
         {
-            _p_Logger.LogError(_ex, "[{Validator}] [{SettingsClass}] Validation Failed - {ConnectionStringName} failed to connect: {ConnectionString}",
-                nameof(HostValidator), _p_SettingsName, _p_ConnectionStringName, _p_ConnectionString);
+            Logger.LogError(_ex,
+                "[{Validator}] [{SettingsClass}] Validation Failed - {ConnectionStringName} failed to connect: {ConnectionString}",
+                nameof(HostValidator), SettingsName, ConnectionStringName, ConnectionString);
             return false;
         }
     }
 
     private static void EnableSerilogValidation()
     {
-        SelfLog.Enable(_p_Message =>
+        SelfLog.Enable(Message =>
         {
-            var _appIdentifier = Assembly.GetExecutingAssembly().FullName?.Split(",").FirstOrDefault() ?? "Program";
-            var _logPath = Path.Join(AppContext.BaseDirectory,
+            string _appIdentifier = Assembly.GetExecutingAssembly().FullName?.Split(",").FirstOrDefault() ?? "Program";
+            string _logPath = Path.Join(AppContext.BaseDirectory,
                 $"[{DateTimeOffset.UtcNow:yyyy-MM-dd HH.mm.ss}]-[{_appIdentifier}]-SerilogError.txt");
-            var _messageToLog = $"[{nameof(HostValidator)}] Serilog Validation Error - {_p_Message}";
+            string _messageToLog = $"[{nameof(HostValidator)}] Serilog Validation Error - {Message}";
             try
             {
                 File.AppendAllText(_logPath, _messageToLog);
@@ -100,10 +102,10 @@ internal class HostValidator
             catch (Exception _ex)
             {
                 // Last resort. Most likely means we won't see these errors when running as a Windows service
-                Console.WriteLine($"[{nameof(HostValidator)}] Serilog Validation Error: {_p_Message}");
+                Console.WriteLine($"[{nameof(HostValidator)}] Serilog Validation Error: {Message}");
                 Console.WriteLine($"[{nameof(HostValidator)}] COULD NOT WRITE THIS TO FILE: {_ex}");
                 throw new HostValidationException(
-                    $"Serilog Validation Error: {_p_Message}{Environment.NewLine}COULD NOT WRITE THIS EXCEPTION TO FILE: {_ex}");
+                    $"Serilog Validation Error: {Message}{Environment.NewLine}COULD NOT WRITE THIS EXCEPTION TO FILE: {_ex}");
             }
         });
     }

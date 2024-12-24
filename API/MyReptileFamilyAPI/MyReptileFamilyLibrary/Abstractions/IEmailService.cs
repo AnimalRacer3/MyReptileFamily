@@ -12,23 +12,33 @@ public interface IEmailService
     /// <summary>
     ///     Send an e-mail
     /// </summary>
-    /// <param name="_p_To">The recipient of the e-mail</param>
-    /// <param name="_p_From">The sender of the e-mail</param>
-    /// <param name="_p_Subject">The subject of the e-mail</param>
-    /// <param name="_p_PlainTextContent">The content of the e-mail</param>
-    /// <param name="_p_CancellationToken">The cancellation token to observe</param>
+    /// <param name="To">The recipient of the e-mail</param>
+    /// <param name="From">The sender of the e-mail</param>
+    /// <param name="Subject">The subject of the e-mail</param>
+    /// <param name="PlainTextContent">The content of the e-mail</param>
+    /// <param name="CancellationToken">The cancellation token to observe</param>
     /// <returns>
     ///     True when the e-mail was sent without error; false otherwise
     /// </returns>
-    Task<bool> SendEmailAsync(string _p_To, string _p_From, string _p_Subject, string _p_PlainTextContent, CancellationToken _p_CancellationToken);
+    Task<bool> SendEmailAsync(string To, string From, string Subject, string PlainTextContent,
+        CancellationToken CancellationToken);
 
     /// <summary>
     ///     Send an e-mail
     /// </summary>
-    /// <param name="_p_Email">The e-mail to send</param>
-    /// <param name="_p_CancellationToken">The cancellation token to observe</param>
+    /// <param name="Email">The e-mail to send</param>
+    /// <param name="CancellationToken">The cancellation token to observe</param>
     /// <returns>
     ///     True when the e-mail was sent without error; false otherwise
     /// </returns>
-    Task<bool> SendEmailAsync(Email _p_Email, CancellationToken _p_CancellationToken);
+    Task<bool> SendEmailAsync(Email Email, CancellationToken CancellationToken);
+
+    /// <summary>
+    /// Checks if the domain of the address given is a valid domain.
+    /// </summary>
+    /// <param name="Email">The e-mail to send</param>
+    /// <returns>
+    /// True when the e-mail has a valid domain; false otherwise
+    /// </returns>
+    bool IsDomainValid(string Email);
 }

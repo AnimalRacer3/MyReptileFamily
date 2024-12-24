@@ -11,5 +11,6 @@ public class DbSettings : IMySQLConnectionString
     [Required] public string Username { get; set; } = "";
     [Required] public string Password { get; set; } = "";
 
-    public string MySQLConnectionString => $"Server={Server};Port={Port};Uid={Username};pwd=\"{Password}\";Database={Database}";
+    public string MySQLConnectionString =>
+        $"Server={Server};Port={Port};Uid={Username};pwd=\"{Password}\";Database={Database}";
 }

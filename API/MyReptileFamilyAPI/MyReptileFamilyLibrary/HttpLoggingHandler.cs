@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using MyReptileFamilyLibrary.Extensions;
 using MyReptileFamilyLibrary.Extensions.Internal;
 
@@ -14,31 +14,31 @@ namespace MyReptileFamilyLibrary;
 ///     log a lot of information!
 /// </remarks>
 /// <inheritdoc />
-public class HttpLoggingHandler(ILogger<HttpLoggingHandler> _p_Logger) : DelegatingHandler
+public class HttpLoggingHandler(ILogger<HttpLoggingHandler> Logger) : DelegatingHandler
 {
     private static readonly Stopwatch _Stopwatch = new();
-    private readonly ILogger<HttpLoggingHandler> _Logger = _p_Logger;
+    private readonly ILogger<HttpLoggingHandler> _Logger = Logger;
 
     /// <inheritdoc />
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage _p_Request,
-        CancellationToken _p_CancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage Request,
+        CancellationToken CancellationToken)
     {
-        var _id = Guid.NewGuid();
-        _Logger.LogDebug("[{Id}] Request: {Request}", _id, _p_Request.ToStringWithoutHeaders());
-        if (_p_Request.ContentIsTextBased())
+        Guid _id = Guid.NewGuid();
+        _Logger.LogDebug("[{Id}] Request: {Request}", _id, Request.ToStringWithoutHeaders());
+        if (Request.ContentIsTextBased())
         {
-            var _requestContent = await _p_Request.Content!.ReadAsStringAsync(_p_CancellationToken);
+            string _requestContent = await Request.Content!.ReadAsStringAsync(CancellationToken);
             _Logger.LogDebug("[{Id}] Request Content: {RequestContent}", _id, _requestContent.TryFormatJson());
         }
 
         _Stopwatch.Restart();
-        var _response = await base.SendAsync(_p_Request, _p_CancellationToken).ConfigureAwait(false);
+        HttpResponseMessage _response = await base.SendAsync(Request, CancellationToken).ConfigureAwait(false);
         _Stopwatch.Stop();
         _Logger.LogDebug("[{Id}] Response [{RequestDuration}]: {Response}", _id, _Stopwatch.Elapsed, _response);
         if (_response.ContentIsTextBased())
         {
             _Stopwatch.Restart();
-            var _responseContent = await _response.Content.ReadAsStringAsync(_p_CancellationToken);
+            string _responseContent = await _response.Content.ReadAsStringAsync(CancellationToken);
             _Stopwatch.Stop();
             _Logger.LogDebug("[{Id}] Response Content [{ResponseReadDuration}]: {ResponseContent}", _id,
                 _Stopwatch.Elapsed, _responseContent.TryFormatJson());

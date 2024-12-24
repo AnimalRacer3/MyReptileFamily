@@ -3,38 +3,47 @@
 namespace MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
 
 /// <summary>
-/// Extensions to turn <see cref="byte"/>s into <see cref="MySqlParameter"/>s
+///     Extensions to turn <see cref="byte" />s into <see cref="MySqlParameter" />s
 /// </summary>
 public static class ByteSqlParameterExtensions
 {
     /// <summary>
-    /// Converts a byte to a <see cref="MySqlParameter"/>
+    ///     Converts a byte to a <see cref="MySqlParameter" />
     /// </summary>
-    /// <param name="_p_Byte"></param>
-    /// <param name="_p_Name"></param>
-    /// <param name="_p_DbType"><see cref="MySqlDbType.Byte"/> by default</param>
+    /// <param name="Byte"></param>
+    /// <param name="Name"></param>
+    /// <param name="DbType"><see cref="MySqlDbType.Byte" /> by default</param>
     /// <returns></returns>
-    public static MySqlParameter ToSqlParameter(this byte _p_Byte, string _p_Name, MySqlDbType _p_DbType = MySqlDbType.Byte)
-        => new(_p_Name, _p_DbType) { Value = _p_Byte };
+    public static MySqlParameter ToSqlParameter(this byte Byte, string Name,
+        MySqlDbType DbType = MySqlDbType.Byte)
+    {
+        return new MySqlParameter(Name, DbType) { Value = Byte };
+    }
 
     /// <summary>
-    /// Converts a byte to a <see cref="MySqlParameter"/>
+    ///     Converts a byte to a <see cref="MySqlParameter" />
     /// </summary>
-    /// <param name="_p_Byte"></param>
-    /// <param name="_p_Name"></param>
-    /// <param name="_p_DbType"><see cref="MySqlDbType.Byte"/> by default</param>
+    /// <param name="Byte"></param>
+    /// <param name="Name"></param>
+    /// <param name="DbType"><see cref="MySqlDbType.Byte" /> by default</param>
     /// <returns></returns>
-    public static MySqlParameter ToSqlParameter(this byte? _p_Byte, string _p_Name, MySqlDbType _p_DbType = MySqlDbType.Byte)
-        => new(_p_Name, _p_DbType) { Value = _p_Byte ?? (object) DBNull.Value };
+    public static MySqlParameter ToSqlParameter(this byte? Byte, string Name,
+        MySqlDbType DbType = MySqlDbType.Byte)
+    {
+        return new MySqlParameter(Name, DbType) { Value = Byte ?? (object)DBNull.Value };
+    }
 
     /// <summary>
-    /// Converts a byte array to a <see cref="MySqlParameter"/>
+    ///     Converts a byte array to a <see cref="MySqlParameter" />
     /// </summary>
-    /// <param name="_p_Byte"></param>
-    /// <param name="_p_Name"></param>
-    /// <param name="_p_Size">Pass -1 for "max"-size SQL types (e.g. varbinary(max))</param>
-    /// <param name="_p_DbType"><see cref="MySqlDbType.VarBinary"/> by default</param>
+    /// <param name="Byte"></param>
+    /// <param name="Name"></param>
+    /// <param name="Size">Pass -1 for "max"-size SQL types (e.g. varbinary(max))</param>
+    /// <param name="DbType"><see cref="MySqlDbType.VarBinary" /> by default</param>
     /// <returns></returns>
-    public static MySqlParameter ToSqlParameter(this byte[]? _p_Byte, string _p_Name, int _p_Size, MySqlDbType _p_DbType = MySqlDbType.VarBinary)
-        => new(_p_Name, _p_DbType, _p_Size) { Value = _p_Byte ?? (object) DBNull.Value };
+    public static MySqlParameter ToSqlParameter(this byte[]? Byte, string Name, int Size,
+        MySqlDbType DbType = MySqlDbType.VarBinary)
+    {
+        return new MySqlParameter(Name, DbType, Size) { Value = Byte ?? (object)DBNull.Value };
+    }
 }

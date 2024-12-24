@@ -13,5 +13,6 @@ public class CheckIfEmailExistsQuery(string Email) : IDapperQuery<bool>
                              WHERE Email = @email
                              );
                          """;
-    public DapperParameter DapperParameter => new (Email.ToSqlParameter("@email", 64));
+
+    public DapperParameter DapperParameter => new(Email.ToSqlParameter("@email", 64));
 }

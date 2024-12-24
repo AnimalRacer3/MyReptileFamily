@@ -4,9 +4,17 @@ using MySqlConnector;
 
 namespace MyReptileFamilyLibrary.SQL;
 
-public class CreateTemporaryTable(string TempTableName, MySqlDbType SqlType, int? Size, int? Precision, int? Scale, List<string>? EnumList) : IDapperSQL
+public class CreateTemporaryTable(
+    string TempTableName,
+    MySqlDbType SqlType,
+    int? Size,
+    int? Precision,
+    int? Scale,
+    List<string>? EnumList) : IDapperSQL
 {
-    public string SQL => $"CREATE TEMPORARY TABLE {TempTableName} (ID INT, Item {MapMySqlDbTypeToSqlType(SqlType)}{(Size != null ? $"({Size})" : (Precision != null && Scale != null) ? $"({Precision},{Scale})" : EnumList != null ? $"({string.Join(",",EnumList)})" : "")});";
+    public string SQL =>
+        $"CREATE TEMPORARY TABLE {TempTableName} (ID INT, Item {MapMySqlDbTypeToSqlType(SqlType)}{(Size != null ? $"({Size})" : Precision != null && Scale != null ? $"({Precision},{Scale})" : EnumList != null ? $"({string.Join(",", EnumList)})" : "")});";
+
     public DapperParameter DapperParameter => new();
 
     private static string MapMySqlDbTypeToSqlType(MySqlDbType sqlType)

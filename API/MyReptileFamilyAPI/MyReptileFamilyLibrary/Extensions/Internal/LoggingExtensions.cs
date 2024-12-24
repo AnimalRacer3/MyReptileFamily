@@ -5,10 +5,14 @@ namespace MyReptileFamilyLibrary.Extensions.Internal;
 
 internal static class LoggingExtensions
 {
-    public static string ToStringFromAPIResult<T>(this T _p_Response, string _p_DefaultResponse = "<No Result>") => _p_Response switch
+    public static string ToStringFromAPIResult<T>(this T Response, string DefaultResponse = "<No Result>")
     {
-        IValueHttpResult<object> { Value: ProblemDetails _problem } => _problem.Detail ?? _problem.ToString() ?? _p_DefaultResponse,
-        IValueHttpResult<object> _valueResult => _valueResult.Value?.ToString() ?? _p_DefaultResponse,
-        _ => _p_Response?.ToString() ?? _p_DefaultResponse
-    };
+        return Response switch
+        {
+            IValueHttpResult<object> { Value: ProblemDetails problem } => problem.Detail ??
+                                                                          problem.ToString() ?? DefaultResponse,
+            IValueHttpResult<object> valueResult => valueResult.Value?.ToString() ?? DefaultResponse,
+            _ => Response?.ToString() ?? DefaultResponse
+        };
+    }
 }

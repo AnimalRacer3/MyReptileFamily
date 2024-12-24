@@ -2,26 +2,12 @@
 using MyReptileFamilyLibrary.Abstractions;
 using MyReptileFamilyLibrary.AppSettings;
 using MyReptileFamilyLibrary.Records;
+using System.Net;
 
 namespace MyReptileFamilyLibrary.Services;
 
-internal abstract class EmailServiceBase(ILogger _p_Logger) : IEmailService
+internal abstract class EmailServiceBase(ILogger Logger) : IEmailService
 {
-    protected abstract ISendGridSettings EmailServiceSettings { get; }
-    protected abstract Task<bool> SendEmail(Email _p_Email, CancellationToken _p_CancellationToken);
-
-    public Task<bool> SendEmailAsync(string _p_To, string _p_From, string _p_Subject, string _p_PlainTextContent, CancellationToken _p_CancellationToken)
-        => SendEmailAsync(new Email(_p_Subject, _p_PlainTextContent, _p_From, _p_To), _p_CancellationToken);
-
-    public async Task<bool> SendEmailAsync(Email _p_Email, CancellationToken _p_CancellationToken)
-    {
-        if (EmailServiceSettings.LogEmails)
-        {
-            _p_Logger.LogDebug(_EMAIL_LOG_TEMPLATE, _p_Email.To, _p_Email.From, _p_Email.Subject, _p_Email.CC, _p_Email.BCC, _p_Email.PlainTextContent);
-        }
-        return !EmailServiceSettings.EmailEnabled || await SendEmail(_p_Email, _p_CancellationToken);
-    }
-
     private const string _EMAIL_LOG_TEMPLATE = """
                                                E-mail Log:
                                                =====
@@ -34,4 +20,41 @@ internal abstract class EmailServiceBase(ILogger _p_Logger) : IEmailService
                                                {Contents}
                                                =====
                                                """;
+
+    protected abstract ISendGridSettings EmailServiceSettings { get; }
+
+    public Task<bool> SendEmailAsync(string To, string From, string Subject, string PlainTextContent,
+        CancellationToken CancellationToken)
+    {
+        return SendEmailAsync(new Email(Subject, PlainTextContent, From, To), CancellationToken);
+    }
+
+    public async Task<bool> SendEmailAsync(Email Email, CancellationToken CancellationToken)
+    {
+        if (Email.To.Count(EmailString => !IsDomainValid(EmailString)) > 0)
+        {
+            Logger.LogWarning("[{Service}] Email provided does not exist", nameof(SendGridEmailService));
+            return false;
+        }
+        if (EmailServiceSettings.LogEmails)
+            Logger.LogDebug(_EMAIL_LOG_TEMPLATE, Email.To, Email.From, Email.Subject, Email.Cc,
+                Email.Bcc, Email.PlainTextContent);
+        return !EmailServiceSettings.EmailEnabled || await SendEmail(Email, CancellationToken);
+    }
+
+    protected abstract Task<bool> SendEmail(Email Email, CancellationToken CancellationToken);
+
+    public bool IsDomainValid(string Email)
+    {
+        try
+        {
+            string domain = Email.Split('@')[1];
+            IPHostEntry hostEntry = Dns.GetHostEntry(domain); // Checks if the domain resolves
+            return hostEntry.AddressList.Length > 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

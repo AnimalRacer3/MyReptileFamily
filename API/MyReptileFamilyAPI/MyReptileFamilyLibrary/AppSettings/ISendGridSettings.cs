@@ -11,12 +11,12 @@ public interface ISendGridSettings
     public string SendGridApiKey { get; set; }
 
     /// <summary>
-    /// E-mail will only be sent if this is true
+    ///     E-mail will only be sent if this is true
     /// </summary>
     public bool EmailEnabled { get; set; }
 
     /// <summary>
-    /// When true, e-amil messages will be logged in addition to being e-mailed
+    ///     When true, e-amil messages will be logged in addition to being e-mailed
     /// </summary>
     public bool LogEmails { get; set; }
 }
