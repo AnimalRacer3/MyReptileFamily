@@ -9,34 +9,40 @@ using MyReptileFamilyLibrary.Abstractions;
 
 namespace MyReptileFamilyAPI.Services;
 
-public class RegisterService(IMRFRepository Repo, IEmailService EmailService, EmailSettings EmailSettings)
+public class RegisterService(IMRFRepository Repo, IEmailService EmailService, EmailSettings EmailSettings) : IRegisterService
 {
-    public async Task<IResult> ValidateOwnerWithDatabaseAsync(RegisterOwner Owner, CancellationToken CancellationToken)
+    public async Task<IResult> ValidateOwnerWithDatabaseAsync(RegisterOwner Owner, IMySQLConnection SqlConn, CancellationToken CancellationToken)
     {
-        // Connecting to DB to finish validation
-        await using IMySQLConnection sqlConn = Repo.CreateMySQLConnection();
-        await sqlConn.OpenAsync(CancellationToken);
-
-        IEnumerable<string> prohibitedWords = await Repo.QueryAsync(new GetBadWordsQuery(), sqlConn);
+        IEnumerable<string> prohibitedWords = await Repo.QueryAsync(new GetBadWordsQuery(), SqlConn);
         // Check if the username contains any prohibited words
         if (prohibitedWords.Any(Word => Regex.IsMatch(Owner.Username, $@"\b{Regex.Escape(Word)}\b", RegexOptions.IgnoreCase)))
             return Results.BadRequest(RegisterUserResult.InvalidUsername);
-        if (await Repo.ExecuteScalarAsync(new CheckIfUserExistsQuery(Owner.Username), sqlConn))
+        if (await Repo.ExecuteScalarAsync(new CheckIfUserExistsQuery(Owner.Username), SqlConn))
             return Results.Conflict("A user with this username already exists");
-        if (await Repo.ExecuteScalarAsync(new CheckIfEmailExistsQuery(Owner.Email), sqlConn))
+        if (await Repo.ExecuteScalarAsync(new CheckIfEmailExistsQuery(Owner.Email), SqlConn))
             return Results.Conflict("A user with this email already exists");
 
-        await Repo.ExecuteAsync(new CreateOwnerSQL(Owner), sqlConn);
+        await Repo.ExecuteAsync(new CreateOwnerSQL(Owner), SqlConn);
 
-        await sqlConn.CloseAsync();
         return Results.Ok();
     }
 
-    public async Task CreateValidationAndWelcomeEmailAsync(RegisterOwner Owner, CancellationToken CancellationToken)
+    public async Task CreateValidationAndWelcomeEmailAsync(RegisterOwner Owner, IMySQLConnection SqlConn, CancellationToken CancellationToken)
     {
-        //TODO: Generate unique hashed token
-        //TODO: Save that token and its expiration date in the datatabase
-        //TODO: Create a page for token validation where the unhashed token is sent in the url to validate the email
+        string? _hashedToken = await Repo.QueryFirstOrDefaultAsync(new GetRegisterToken(Owner.Username), SqlConn);
+        string _token = Guid.NewGuid().ToString();
+        if (_hashedToken == null)
+        {
+            _hashedToken = BCrypt.Net.BCrypt.HashPassword(_token);
+
+            await Repo.ExecuteAsync(new AddRegistrationToken(_hashedToken, Owner.Username), SqlConn);
+        }
+        else
+        {
+            _hashedToken = BCrypt.Net.BCrypt.HashPassword(_token);
+
+            await Repo.ExecuteAsync(new UpdateRegistrationToken(_hashedToken, Owner.Username), SqlConn);
+        }
         
         Email registerEmail = EmailSettings.BaseRegisterEmail with
         {
@@ -53,6 +59,8 @@ public class RegisterService(IMRFRepository Repo, IEmailService EmailService, Em
                  If you have any questions or need help getting started, feel free to reach out to our support team at:
                  support@myreptilefamily.com
                  Thank you for joining MyReptileFamily - we can't wait to see the amazing things you'll share with us!
+                 
+                 Please go to www.MyReptileFamily.com/auth?username={Owner.Username}&token={_token} To validate your email.
 
                  Best,
                  MyReptileFamily Team

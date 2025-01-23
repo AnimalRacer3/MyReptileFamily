@@ -23,6 +23,10 @@ _routeGroup.MapPost("/register",
     async ([FromBody] RegisterOwner User, CancellationToken CancellationToken) =>
     await app.Services.GetRequiredService<IRegister>().RegisterUserAsync(User, CancellationToken));
 
+_routeGroup.MapPost("/auth",
+    async (string Username, string Token, CancellationToken CancellationToken) =>
+    await app.Services.GetRequiredService<IRegister>().AuthUserAsync(Username, Token, CancellationToken));
+
 // Make the Username switchable with the email
 _routeGroup.MapPost("/login",
     async ([FromBody] Owner User, CancellationToken CancellationToken) =>

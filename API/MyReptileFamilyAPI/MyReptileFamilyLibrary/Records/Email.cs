@@ -18,4 +18,9 @@ public record Email(string Subject, string PlainTextContent, string From, params
     ///     The blind carbon copy recipients of the e-mail
     /// </summary>
     public IEnumerable<string> Bcc { get; set; } = [];
+
+    /// <summary>
+    ///     The id of a template to be used
+    /// </summary>
+    public string TemplateId { get; set; } = "";
 }

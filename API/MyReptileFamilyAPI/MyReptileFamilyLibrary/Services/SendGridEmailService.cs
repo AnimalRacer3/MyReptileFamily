@@ -37,7 +37,9 @@ internal class SendGridEmailService(
             {
                 From = new EmailAddress(Email.From),
                 Subject = Email.Subject,
-                PlainTextContent = Email.PlainTextContent
+                PlainTextContent = Email.PlainTextContent,
+                HtmlContent = "",
+                
             };
             foreach (string _to in Email.To) _msg.AddTo(new EmailAddress(_to));
             foreach (string _cc in Email.Cc) _msg.AddCc(new EmailAddress(_cc));
