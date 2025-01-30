@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyReptileFamilyAPI.AppSettings;
 using MyReptileFamilyAPI.Handlers;
 using MyReptileFamilyAPI.Models;
+using MyReptileFamilyAPI.Record;
 using MyReptileFamilyLibrary.Builder;
 
 WebBuilder builder = WebBuilder.Create();
@@ -17,21 +18,32 @@ WebApplication app = builder.BuildAndValidate();
 app.UseHttpsRedirection();
 #endif
 
-RouteGroupBuilder _routeGroup = app.MapGroup("/api");
+RouteGroupBuilder routeGroup = app.MapGroup("/api");
 
-_routeGroup.MapPost("/register",
+routeGroup.MapPost("/register",
     async ([FromBody] RegisterOwner User, CancellationToken CancellationToken) =>
     await app.Services.GetRequiredService<IRegister>().RegisterUserAsync(User, CancellationToken));
 
-_routeGroup.MapPost("/auth",
+routeGroup.MapPost("/auth",
     async (string Username, string Token, CancellationToken CancellationToken) =>
     await app.Services.GetRequiredService<IRegister>().AuthUserAsync(Username, Token, CancellationToken));
 
 // Make the Username switchable with the email
-_routeGroup.MapPost("/login",
+routeGroup.MapPost("/login",
     async ([FromBody] Owner User, CancellationToken CancellationToken) =>
-    await app.Services.GetRequiredService<ILogIn>().UserLogIn(User, CancellationToken));
+    await app.Services.GetRequiredService<ILogIn>().UserLogInAsync(User, CancellationToken));
 
-_routeGroup.MapGet("/sale", (int PageNo, int Count, string ReptileType, CancellationToken CancellationToken) => "HOME");
+routeGroup.MapGet("/sale", (int PageNo, int Count, string ReptileType, CancellationToken CancellationToken) => "HOME");
+
+
+RouteGroupBuilder messagesGroup = app.MapGroup("/messages");
+
+messagesGroup.MapPost("/send",
+    async ([FromBody] MessageDTO Message, CancellationToken CancellationToken) =>
+    await app.Services.GetRequiredService<IMessages>().SendAsync(Message, CancellationToken));
+
+messagesGroup.MapGet("/{receiverId:long}/{senderId:long}/{count:int}",
+    async(long ReceiverId, long SenderId, int Count, CancellationToken CancellationToken) => 
+    await app.Services.GetRequiredService<IMessages>().GetMessages(ReceiverId, SenderId, Count, CancellationToken));
 
 await app.RunAsync();

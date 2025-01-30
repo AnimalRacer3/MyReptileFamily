@@ -4,5 +4,5 @@ namespace MyReptileFamilyAPI.Handlers;
 
 public interface ILogIn
 {
-    Task<IResult> UserLogIn(Owner User, CancellationToken Cancellation);
+    Task<IResult> UserLogInAsync(Owner User, CancellationToken Cancellation);
 }

@@ -8,7 +8,7 @@ namespace MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
 public static class StringSqlParameterExtensions
 {
     /// <summary>
-    ///     Converts a string to SQL Parameter
+    ///     Converts a string to SQL Parameter VarChar
     /// </summary>
     /// <param name="String">The string to turn into a parameter (nulls will become <see cref="DBNull.Value" />)</param>
     /// <param name="Name"></param>
@@ -36,6 +36,35 @@ public static class StringSqlParameterExtensions
         else
             _value = !string.IsNullOrWhiteSpace(String) ? String : string.Empty;
         return new MySqlParameter(Name, DbType, Size) { Value = _value };
+    }
+
+    /// <summary>
+    ///     Converts a string to SQL Parameter Text
+    /// </summary>
+    /// <param name="String">The string to turn into a parameter (nulls will become <see cref="DBNull.Value" />)</param>
+    /// <param name="Name"></param>
+    /// <param name="DbType"></param>
+    /// <param name="TreatNullOrWhiteSpaceAsNull">
+    ///     When true, null/whitespace-only strings will become <see cref="DBNull.Value" />.
+    ///     When false, they will become an empty string.
+    ///     If <paramref name="TreatNullAsNull" /> is true, nulls will become <see cref="DBNull.Value" />.
+    /// </param>
+    /// <param name="TreatNullAsNull">
+    ///     When true, null strings will become <see cref="DBNull.Value" />.
+    ///     When false, they will become an empty string.
+    /// </param>
+    /// <returns></returns>
+    public static MySqlParameter ToSqlParameter(this string? String, string Name, MySqlDbType DbType = MySqlDbType.Text,
+        bool TreatNullOrWhiteSpaceAsNull = false, bool TreatNullAsNull = false)
+    {
+        object _value;
+        if (String is null && TreatNullAsNull)
+            _value = DBNull.Value;
+        else if (string.IsNullOrWhiteSpace(String) && TreatNullOrWhiteSpaceAsNull)
+            _value = DBNull.Value;
+        else
+            _value = !string.IsNullOrWhiteSpace(String) ? String : string.Empty;
+        return new MySqlParameter(Name, DbType) { Value = _value };
     }
 
     /// <summary>

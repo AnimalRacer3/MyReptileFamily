@@ -60,10 +60,10 @@ public class RegisterService(IMRFRepository Repo, IEmailService EmailService, Em
                  support@myreptilefamily.com
                  Thank you for joining MyReptileFamily - we can't wait to see the amazing things you'll share with us!
                  
-                 Please go to www.MyReptileFamily.com/auth?username={Owner.Username}&token={_token} To validate your email.
+                 Please go to www.MyReptileFamily.com/api/auth?username={Owner.Username}&token={_token} To validate your email.
 
                  Best,
-                 MyReptileFamily Team
+                 MyReptileFamily Team 
                  """ : EmailSettings.BaseRegisterEmail.PlainTextContent
         };
 
