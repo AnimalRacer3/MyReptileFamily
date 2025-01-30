@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -221,6 +222,18 @@ public abstract class BuilderBase<TBuilder, THost> where TBuilder : BuilderBase<
         where TOptions : class
     {
         Builder.Services.Configure(ConfigureAction);
+        return (TBuilder)this;
+    }
+
+    public TBuilder WithCors(string CorPolicyName, string URL)
+    {
+        Builder.Services.AddCors(Options =>
+        {
+            Options.AddPolicy(CorPolicyName, Policy =>
+            {
+                Policy.WithOrigins(URL).AllowAnyHeader().AllowAnyMethod();
+            });
+        });
         return (TBuilder)this;
     }
 

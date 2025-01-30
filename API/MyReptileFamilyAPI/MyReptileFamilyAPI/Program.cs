@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using MyReptileFamilyAPI.AppSettings;
 using MyReptileFamilyAPI.Handlers;
 using MyReptileFamilyAPI.Models;
@@ -9,8 +10,11 @@ using MyReptileFamilyLibrary.Builder;
 WebBuilder builder = WebBuilder.Create();
 builder.WithSettings<DbSettings>();
 EmailSettings emailSettings = builder.WithSettings<EmailSettings>();
+APISettings apiSettings = builder.WithSettings<APISettings>();
 
 builder.WithEmailService(emailSettings);
+
+builder.WithCors("AllowSpecificOrigins", apiSettings.URL);
 
 WebApplication app = builder.BuildAndValidate();
 
