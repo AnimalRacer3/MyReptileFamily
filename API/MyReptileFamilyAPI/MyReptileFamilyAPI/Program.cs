@@ -18,6 +18,8 @@ builder.WithCors("AllowSpecificOrigins", apiSettings.URL);
 
 WebApplication app = builder.BuildAndValidate();
 
+app.UseCors("AllowSpecificOrigins");
+
 #if DEBUG
 app.UseHttpsRedirection();
 #endif
