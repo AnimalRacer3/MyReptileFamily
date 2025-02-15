@@ -65,7 +65,7 @@ public abstract class BuilderBase<TBuilder, THost> where TBuilder : BuilderBase<
         THost _host = Build();
         if (_getBearerTokenAsyncFunc is not null)
             AuthBearerTokenFactory.SetBearerTokenGetterFunc(Token => _getBearerTokenAsyncFunc(_host, Token));
-
+        
         HostValidator.Validate(_host, _settingsTypes, ValidateBuild);
         return _host;
     }

@@ -12,9 +12,11 @@ builder.WithSettings<DbSettings>();
 EmailSettings emailSettings = builder.WithSettings<EmailSettings>();
 APISettings apiSettings = builder.WithSettings<APISettings>();
 
+builder.SetPort(apiSettings.Port);
+
 builder.WithEmailService(emailSettings);
 
-builder.WithCors("AllowSpecificOrigins", apiSettings.URL);
+builder.WithCors("AllowSpecificOrigins", $"{apiSettings.URL}:{apiSettings.Port}");
 
 WebApplication app = builder.BuildAndValidate();
 

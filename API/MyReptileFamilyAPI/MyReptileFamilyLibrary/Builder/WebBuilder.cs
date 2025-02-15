@@ -1,6 +1,8 @@
-﻿using Autofac;
+﻿using System.Net;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using MyReptileFamilyLibrary.EndpointFilters;
@@ -62,5 +64,20 @@ public class WebBuilder : BuilderBase<WebBuilder, WebApplication>
                 return Next(Context);
             });
         return _app;
+    }
+
+    public void SetPort(int Port, string Url = "*")
+    {
+        _webApplicationBuilder.WebHost.ConfigureKestrel(Options =>
+        {
+            if (Url.Equals("*"))
+            {
+                Options.ListenAnyIP(Port);
+            }
+            else
+            {
+                Options.Listen(IPAddress.Parse(Url), Port);
+            }
+        });
     }
 }
