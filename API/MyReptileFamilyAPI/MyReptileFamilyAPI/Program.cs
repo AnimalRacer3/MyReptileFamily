@@ -12,7 +12,7 @@ builder.WithSettings<DbSettings>();
 EmailSettings emailSettings = builder.WithSettings<EmailSettings>();
 APISettings apiSettings = builder.WithSettings<APISettings>();
 
-builder.SetPort(apiSettings.Port);
+builder.SetPort(apiSettings.Port, apiSettings.PathToCert, apiSettings.CertPassword);
 
 builder.WithEmailService(emailSettings);
 

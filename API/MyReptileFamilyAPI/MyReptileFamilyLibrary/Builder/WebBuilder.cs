@@ -66,17 +66,23 @@ public class WebBuilder : BuilderBase<WebBuilder, WebApplication>
         return _app;
     }
 
-    public void SetPort(int Port, string Url = "*")
+    public void SetPort(int Port, string CertPath, string CertPassword, string Url = "*")
     {
         _webApplicationBuilder.WebHost.ConfigureKestrel(Options =>
         {
             if (Url.Equals("*"))
             {
-                Options.ListenAnyIP(Port);
+                Options.ListenAnyIP(Port, listenOptions =>
+                {
+                    listenOptions.UseHttps(CertPath, CertPassword);
+                });
             }
             else
             {
-                Options.Listen(IPAddress.Parse(Url), Port);
+                Options.Listen(IPAddress.Parse(Url), Port, ListenOptions =>
+                {
+                    ListenOptions.UseHttps(CertPath, CertPassword);
+                });
             }
         });
     }
