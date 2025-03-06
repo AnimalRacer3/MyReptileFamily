@@ -35,7 +35,7 @@ $(document).ready(function () {
         // AJAX call to backend
         $.ajax({
             type: 'POST',
-            url: '/api/register', // Replace with your backend endpoint
+            url: 'https://localhost:7040/api/register', // Replace with your backend endpoint
             data: JSON.stringify(formData),
             contentType: 'application/json',
             success: function (response) {

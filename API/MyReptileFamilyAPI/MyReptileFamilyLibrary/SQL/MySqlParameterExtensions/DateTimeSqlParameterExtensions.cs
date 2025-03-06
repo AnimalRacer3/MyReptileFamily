@@ -3,27 +3,33 @@
 namespace MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
 
 /// <summary>
-/// Extensions to turn <see cref="DateTime"/>s into <see cref="MySqlParameter"/>s
+///     Extensions to turn <see cref="DateTime" />s into <see cref="MySqlParameter" />s
 /// </summary>
 public static class DateTimeSqlParameterExtensions
 {
     /// <summary>
-    /// Converts a DateTime object to a SqlParameter
+    ///     Converts a DateTime object to a SqlParameter
     /// </summary>
-    /// <param name="_p_Value"></param>
-    /// <param name="_p_Name"></param>
-    /// <param name="_p_DbType"></param>
+    /// <param name="Value"></param>
+    /// <param name="Name"></param>
+    /// <param name="DbType"></param>
     /// <returns></returns>
-    public static MySqlParameter ToSqlParameter(this DateTime _p_Value, string _p_Name, MySqlDbType _p_DbType = MySqlDbType.DateTime)
-        => new(_p_Name, _p_DbType) { Value = _p_Value };
+    public static MySqlParameter ToSqlParameter(this DateTime Value, string Name,
+        MySqlDbType DbType = MySqlDbType.DateTime)
+    {
+        return new MySqlParameter(Name, DbType) { Value = Value };
+    }
 
     /// <summary>
-    /// Converts a Nullable DateTime object to a SqlParameter.  Null values will be inserted with DBNull.Value.
+    ///     Converts a Nullable DateTime object to a SqlParameter.  Null values will be inserted with DBNull.Value.
     /// </summary>
-    /// <param name="_p_Value"></param>
-    /// <param name="_p_Name"></param>
-    /// <param name="_p_DbType"></param>
+    /// <param name="Value"></param>
+    /// <param name="Name"></param>
+    /// <param name="DbType"></param>
     /// <returns></returns>
-    public static MySqlParameter ToSqlParameter(this DateTime? _p_Value, string _p_Name, MySqlDbType _p_DbType = MySqlDbType.DateTime)
-        => new(_p_Name, _p_DbType) { Value = _p_Value.HasValue ? _p_Value.Value : DBNull.Value };
+    public static MySqlParameter ToSqlParameter(this DateTime? Value, string Name,
+        MySqlDbType DbType = MySqlDbType.DateTime)
+    {
+        return new MySqlParameter(Name, DbType) { Value = Value.HasValue ? Value.Value : DBNull.Value };
+    }
 }

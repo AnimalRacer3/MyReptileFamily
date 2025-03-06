@@ -1,6 +1,6 @@
-﻿using MyReptileFamilyLibrary.Builder;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MyReptileFamilyLibrary.Builder;
 using Refit;
 
 namespace MyReptileFamilyLibrary.Factories;
@@ -26,10 +26,10 @@ public static class AuthBearerTokenFactory
     /// <exception cref="InvalidOperationException">
     ///     Thrown when <see cref="SetBearerTokenGetterFunc" /> not called prior to calling this method
     /// </exception>
-    public static Task<string> GetBearerTokenAsync(CancellationToken _p_CancellationToken)
+    public static Task<string> GetBearerTokenAsync(CancellationToken CancellationToken)
     {
         VerifyBearerTokenGetterFuncIsSet();
-        return _getBearerTokenAsyncFunc!(_p_CancellationToken);
+        return _getBearerTokenAsyncFunc!(CancellationToken);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public static class AuthBearerTokenFactory
     /// <exception cref="InvalidOperationException">
     ///     Thrown when <see cref="SetBearerTokenGetterFunc" /> not called prior to calling this method
     /// </exception>
-    public static void VerifyBearerTokenGetterFuncIsSet(ILogger? _p_Logger = null)
+    public static void VerifyBearerTokenGetterFuncIsSet(ILogger? Logger = null)
     {
         if (_getBearerTokenAsyncFunc is not null) return;
         try
@@ -50,7 +50,7 @@ public static class AuthBearerTokenFactory
         catch (Exception _ex)
         {
             // Logger has to be invoked manually due to where this is called in the application lifetime
-            _p_Logger?.LogError(_ex,
+            Logger?.LogError(_ex,
                 "Auth Bearer Token Factory attempted to be used before its getter function was set");
             throw;
         }
@@ -59,8 +59,8 @@ public static class AuthBearerTokenFactory
     /// <summary>
     ///     Provide a delegate that returns a bearer token to use for authorization
     /// </summary>
-    public static void SetBearerTokenGetterFunc(Func<CancellationToken, Task<string>> _p_GetBearerTokenAsyncFunc)
+    public static void SetBearerTokenGetterFunc(Func<CancellationToken, Task<string>> GetBearerTokenAsyncFunc)
     {
-        _getBearerTokenAsyncFunc = _p_GetBearerTokenAsyncFunc;
+        _getBearerTokenAsyncFunc = GetBearerTokenAsyncFunc;
     }
 }

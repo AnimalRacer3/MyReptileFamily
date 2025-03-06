@@ -8,35 +8,39 @@ public static class TypeExtensions
     ///     Determines whether the given <see cref="Type" /> has any non-System interfaces
     /// </summary>
     /// <returns>True if it has any non-System interfaces, false otherwise</returns>
-    public static bool HasNonSystemInterfaces(this Type _p_Type) => _p_Type.GetInterfaces().Exists(_p_InterfaceType => !_p_InterfaceType.FullName!.StartsWith("System"));
+    public static bool HasNonSystemInterfaces(this Type Type)
+    {
+        return Type.GetInterfaces().Exists(InterfaceType => !InterfaceType.FullName!.StartsWith("System"));
+    }
 
     /// <summary>
     ///     Determines whether the given <see cref="Type" /> only has direct interfaces
     /// </summary>
     /// <returns>True if it has interfaces not in the type's base class (or has no base class), false otherwise</returns>
-    public static bool OnlyHasDirectInterfaces(this Type _p_Type)
+    public static bool OnlyHasDirectInterfaces(this Type Type)
     {
-        var _interfaces = _p_Type.GetInterfaces();
-        if (_p_Type.BaseType is null) return true;
-        var _baseInterfaces = _p_Type.BaseType.GetInterfaces();
+        Type[] _interfaces = Type.GetInterfaces();
+        if (Type.BaseType is null) return true;
+        Type[] _baseInterfaces = Type.BaseType.GetInterfaces();
 
-        var _directInterfacesOnly = _interfaces.Except(_baseInterfaces);
+        IEnumerable<Type> _directInterfacesOnly = _interfaces.Except(_baseInterfaces);
         return _directInterfacesOnly.Any();
     }
 
     /// <summary>
-    ///     Determines whether provided type does not implement <see cref="IDapperSQL"/> or <see cref="IDapperQuery{T}" />
+    ///     Determines whether provided type does not implement <see cref="IDapperSQL" /> or <see cref="IDapperQuery{T}" />
     /// </summary>
-    public static bool DoesNotImplementDapperInterfaces(this Type _p_Type)
+    public static bool DoesNotImplementDapperInterfaces(this Type Type)
     {
         Type[] _dapperInterfaces = [typeof(IDapperSQL), typeof(IDapperStoredProcedure), typeof(IDapperTransaction)];
-        Type[] _dapperOpenGenerics = [typeof(IDapperQuery<>), typeof(IDapperOutputStoredProcedure<>), typeof(IDapperTransaction<>)];
-        Type[] _interfaces = _p_Type.GetInterfaces();
+        Type[] _dapperOpenGenerics =
+            [typeof(IDapperQuery<>), typeof(IDapperOutputStoredProcedure<>), typeof(IDapperTransaction<>)];
+        Type[] _interfaces = Type.GetInterfaces();
 
         if (_interfaces.Intersect(_dapperInterfaces).Any()) return false;
         return !_interfaces
-            .Where(_p_Interface => _p_Interface.IsGenericType)
-            .Select(_p_Interface => _p_Interface.GetGenericTypeDefinition())
+            .Where(Interface => Interface.IsGenericType)
+            .Select(Interface => Interface.GetGenericTypeDefinition())
             .Intersect(_dapperOpenGenerics).Any();
     }
 }

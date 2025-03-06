@@ -23,7 +23,7 @@ public interface IMRFRepository
     ///     Run basic queries against the database
     /// </summary>
     /// <param name="Query">The query to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
     Task<List<TReturnType>> QueryAsync<TReturnType>(IDapperQuery<TReturnType> Query, IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
@@ -33,7 +33,7 @@ public interface IMRFRepository
     ///     Results in an exception if no records found.
     /// </summary>
     /// <param name="Query">The query to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
     Task<TReturnType> QueryFirstAsync<TReturnType>(IDapperQuery<TReturnType> Query, IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
@@ -42,9 +42,10 @@ public interface IMRFRepository
     ///     Run a query and return the first result (or default if nothing found)
     /// </summary>
     /// <param name="Query">The query to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
-    Task<TReturnType?> QueryFirstOrDefaultAsync<TReturnType>(IDapperQuery<TReturnType> Query, IMySQLConnection Connection,
+    Task<TReturnType?> QueryFirstOrDefaultAsync<TReturnType>(IDapperQuery<TReturnType> Query,
+        IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
 
     /// <summary>
@@ -52,7 +53,7 @@ public interface IMRFRepository
     ///     Results in an exception unless exactly one record is found.
     /// </summary>
     /// <param name="Query">The query to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
     Task<TReturnType> QuerySingleAsync<TReturnType>(IDapperQuery<TReturnType> Query, IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
@@ -62,16 +63,17 @@ public interface IMRFRepository
     ///     Results in an exception unless exactly 0 or 1 record is found.
     /// </summary>
     /// <param name="Query">The query to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
-    Task<TReturnType> QuerySingleOrDefaultAsync<TReturnType>(IDapperQuery<TReturnType> Query, IMySQLConnection Connection,
+    Task<TReturnType?> QuerySingleOrDefaultAsync<TReturnType>(IDapperQuery<TReturnType> Query,
+        IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
 
     /// <summary>
     ///     Executes a Scalar Query against the database
     /// </summary>
     /// <param name="Query">The query to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
     Task<TReturnType?> ExecuteScalarAsync<TReturnType>(IDapperQuery<TReturnType> Query, IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
@@ -80,7 +82,7 @@ public interface IMRFRepository
     ///     Execute arbitrary SQL against the database
     /// </summary>
     /// <param name="SQL">The SQL to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
     Task<int> ExecuteAsync(IDapperSQL SQL, IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
@@ -89,7 +91,7 @@ public interface IMRFRepository
     ///     Execute a given Stored Procedure
     /// </summary>
     /// <param name="StoredProcedure">The StoredProcedure to execute</param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="Transaction">The active SQL transaction</param>
     Task ExecuteStoredProcedureAsync(IDapperStoredProcedure StoredProcedure, IMySQLConnection Connection,
         IDbTransaction? Transaction = null);
@@ -99,7 +101,7 @@ public interface IMRFRepository
     ///     If an exception is thrown, the Transaction is rolled back (and the exception re-thrown).
     ///     If no errors occur, then the Transaction is committed.
     /// </summary>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="DapperTransaction">Contains all the SQL to run within the Transaction.</param>
     /// <param name="CancellationToken">The cancellation token.</param>
     /// <remarks>
@@ -116,7 +118,7 @@ public interface IMRFRepository
     ///     If no errors occur, then the Transaction is committed.
     /// </summary>
     /// <param name="DapperTransaction">Contains all the SQL to run within the Transaction, that returns a value. </param>
-    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection"/> to create one</param>
+    /// <param name="Connection">The active SQL connection; call <see cref="CreateMySQLConnection" /> to create one</param>
     /// <param name="CancellationToken">The cancellation token.</param>
     /// <remarks>
     ///     Stored procedures that do their own Transaction management should not use this method, as conflicts

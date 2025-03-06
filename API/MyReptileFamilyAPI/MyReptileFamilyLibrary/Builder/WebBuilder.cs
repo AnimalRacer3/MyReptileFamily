@@ -1,56 +1,89 @@
-﻿using Autofac;
+﻿using System.Net;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using MyReptileFamilyLibrary.EndpointFilters;
 
 namespace MyReptileFamilyLibrary.Builder;
 
-public class WebBuilder() : BuilderBase<WebBuilder, WebApplication>
+public class WebBuilder : BuilderBase<WebBuilder, WebApplication>
 {
     private readonly WebApplicationBuilder _webApplicationBuilder = WebApplication.CreateBuilder();
+
     /// <inheritdoc />
     protected override IHostApplicationBuilder Builder => _webApplicationBuilder;
+
     /// <inheritdoc />
-    protected override WebApplication Build() => _webApplicationBuilder.Build();
+    protected override WebApplication Build()
+    {
+        return _webApplicationBuilder.Build();
+    }
 
-    protected override void RegisterAutofac(AutofacServiceProviderFactory _p_Factory, Action<ContainerBuilder> _p_Configure)
-        => _webApplicationBuilder.Host.UseServiceProviderFactory(_p_Factory).ConfigureContainer(_p_Configure);
+    protected override void RegisterAutofac(AutofacServiceProviderFactory Factory, Action<ContainerBuilder> Configure)
+    {
+        _webApplicationBuilder.Host.UseServiceProviderFactory(Factory).ConfigureContainer(Configure);
+    }
 
     /// <summary>
-    /// Creates a new <see cref="WebBuilder"/>, with Serilog logging and dependencies registered
-    /// with Autofac
+    ///     Creates a new <see cref="WebBuilder" />, with Serilog logging and dependencies registered
+    ///     with Autofac
     /// </summary>
-    /// <param name="_p_AutofacModulesToRegister">Any custom Autofac modules that should also be registered</param>
-    public static WebBuilder Create(params Module[] _p_AutofacModulesToRegister)
-        => CreateManually()
+    /// <param name="AutofacModulesToRegister">Any custom Autofac modules that should also be registered</param>
+    public static WebBuilder Create(params Module[] AutofacModulesToRegister)
+    {
+        return CreateManually()
             .WithLogging()
-            .WithDependenciesRegistered(_p_AutofacModulesToRegister);
+            .WithDependenciesRegistered(AutofacModulesToRegister);
+    }
 
     /// <summary>
-    /// Only call this if you want to configure logging and DI manually.
-    /// IMPORTANT: Unless there's a very specific scenario to cater to, always call <see cref="Create"/> instead!
+    ///     Only call this if you want to configure logging and DI manually.
+    ///     IMPORTANT: Unless there's a very specific scenario to cater to, always call <see cref="Create" /> instead!
     /// </summary>
-    public static WebBuilder CreateManually() => new();
+    public static WebBuilder CreateManually()
+    {
+        return new WebBuilder();
+    }
 
-    /// <inheritdoc cref="BuilderBase{TBuilder,THost}.BuildAndValidate"/>
-    /// <param name="_p_LogRequestBody">
-    /// Calls <see cref="HttpRequestRewindExtensions.EnableBuffering(HttpRequest)"/> when true,
-    /// so that the request/response logger can log the request body.
+    /// <inheritdoc cref="BuilderBase{TBuilder,THost}.BuildAndValidate" />
+    /// <param name="LogRequestBody">
+    ///     Calls <see cref="HttpRequestRewindExtensions.EnableBuffering(HttpRequest)" /> when true,
+    ///     so that the request/response logger can log the request body.
     /// </param>
-    public WebApplication BuildAndValidate(bool _p_LogRequestBody = false)
+    public WebApplication BuildAndValidate(bool LogRequestBody = false)
     {
         WebApplication _app = base.BuildAndValidate();
-        RequestResponseLogFilter.LogRequestBody = _p_LogRequestBody;
-        if (_p_LogRequestBody)
-        {
-            _app.Use(_p_Next => _p_Context =>
+        RequestResponseLogFilter.LogRequestBody = LogRequestBody;
+        if (LogRequestBody)
+            _app.Use(Next => Context =>
             {
-                _p_Context.Request.EnableBuffering();
-                return _p_Next(_p_Context);
+                Context.Request.EnableBuffering();
+                return Next(Context);
             });
-        }
         return _app;
+    }
+
+    public void SetPort(int Port, string CertPath, string CertPassword, string Url = "*")
+    {
+        _webApplicationBuilder.WebHost.ConfigureKestrel(Options =>
+        {
+            if (Url.Equals("*"))
+            {
+                Options.ListenAnyIP(Port, listenOptions =>
+                {
+                    listenOptions.UseHttps(CertPath, CertPassword);
+                });
+            }
+            else
+            {
+                Options.Listen(IPAddress.Parse(Url), Port, ListenOptions =>
+                {
+                    ListenOptions.UseHttps(CertPath, CertPassword);
+                });
+            }
+        });
     }
 }

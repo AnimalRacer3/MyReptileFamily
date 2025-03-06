@@ -9,7 +9,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: '/api/login', 
+            url: 'https://localhost:7040/api/login', 
             data: JSON.stringify(formData),
             contentType: 'application/json',
             success: function(response) {

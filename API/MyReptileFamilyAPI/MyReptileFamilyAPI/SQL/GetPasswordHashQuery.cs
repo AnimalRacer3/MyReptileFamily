@@ -1,7 +1,6 @@
 ﻿using MyReptileFamilyLibrary.Records;
 using MyReptileFamilyLibrary.SQL.Abstractions;
 using MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
-using MySqlConnector;
 
 namespace MyReptileFamilyAPI.SQL;
 
@@ -15,8 +14,8 @@ public class GetPasswordHashQuery(string? Username, string? Email) : IDapperQuer
                          """;
 
     public DapperParameter DapperParameter =>
-    new([
-        Username.ToSqlParameter("@username", 16),
-        Email.ToSqlParameter("@email", 64)
-    ]);
+        new([
+            Username.ToSqlParameter("@username", 16),
+            Email.ToSqlParameter("@email", 64)
+        ]);
 }

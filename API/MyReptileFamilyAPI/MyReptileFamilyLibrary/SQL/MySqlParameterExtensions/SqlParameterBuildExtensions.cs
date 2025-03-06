@@ -1,22 +1,24 @@
-﻿using MySqlConnector;
-using System.Data;
+﻿using System.Data;
+using MySqlConnector;
 
 namespace MyReptileFamilyLibrary.SQL.MySqlParameterExtensions;
 
 /// <summary>
-/// General extension methods for <see cref="MySqlParameter" />
+///     General extension methods for <see cref="MySqlParameter" />
 /// </summary>
 public static class SqlParameterBuildExtensions
 {
     /// <summary>
-    /// Uses <see cref="MySqlParameter"/>s to build an SQL INSERT statement for <paramref name="_p_TableName"/>
+    ///     Uses <see cref="MySqlParameter" />s to build an SQL INSERT statement for <paramref name="TableName" />
     /// </summary>
-    public static string BuildInsertSQL(this List<MySqlParameter> _p_Parameters, string _p_TableName)
+    public static string BuildInsertSQL(this List<MySqlParameter> Parameters, string TableName)
     {
-        string _columns = string.Join($"{Environment.NewLine}    , ", _p_Parameters.Select(_p_Parameter => _p_Parameter.ParameterName[1..]));
-        string _values = string.Join($"{Environment.NewLine}    , ", _p_Parameters.Select(_p_Parameter => _p_Parameter.ParameterName));
+        string _columns = string.Join($"{Environment.NewLine}    , ",
+            Parameters.Select(Parameter => Parameter.ParameterName[1..]));
+        string _values = string.Join($"{Environment.NewLine}    , ",
+            Parameters.Select(Parameter => Parameter.ParameterName));
         return $"""
-                INSERT INTO {_p_TableName}
+                INSERT INTO {TableName}
                 (
                       {_columns}
                 )
@@ -28,13 +30,13 @@ public static class SqlParameterBuildExtensions
     }
 
     /// <summary>
-    /// Returns a single string containing every input parameter's name and value.
+    ///     Returns a single string containing every input parameter's name and value.
     /// </summary>
-    public static string BuildInputStringList(this List<MySqlParameter> _p_Parameters)
+    public static string BuildInputStringList(this List<MySqlParameter> Parameters)
     {
         List<ParameterDirection> _parametersToList = [ParameterDirection.Input, ParameterDirection.InputOutput];
-        return string.Join(", ", _p_Parameters
-            .Where(_p_Parameter => _parametersToList.Contains(_p_Parameter.Direction))
-            .Select(_p_Parameter => $"{_p_Parameter.ParameterName} [{_p_Parameter.Value}]"));
+        return string.Join(", ", Parameters
+            .Where(Parameter => _parametersToList.Contains(Parameter.Direction))
+            .Select(Parameter => $"{Parameter.ParameterName} [{Parameter.Value}]"));
     }
 }

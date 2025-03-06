@@ -4,9 +4,10 @@ namespace MyReptileFamilyLibrary.AppSettings;
 
 /// <summary>
 ///     Add to settings files that have a SQL connection string.
-///     If you need a second connection string for the EDI database, add <see cref="IMySQLConnectionString"/> to
+///     If you need a second connection string for the EDI database, add <see cref="IMySQLConnectionString" /> to
 ///     your settings.
-///     This connection is automatically used when creating SQL connections in <see cref="IMRFRepository.CreateMySQLConnection"/>
+///     This connection is automatically used when creating SQL connections in
+///     <see cref="IMRFRepository.CreateMySQLConnection" />
 /// </summary>
 public interface IMySQLConnectionString
 {

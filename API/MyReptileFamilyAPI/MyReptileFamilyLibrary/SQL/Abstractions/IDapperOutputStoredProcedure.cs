@@ -9,15 +9,17 @@ namespace MyReptileFamilyLibrary.SQL.Abstractions;
 public interface IDapperOutputStoredProcedure<TOutputType>
 {
     /// <summary>
-    /// The name of the stored procedure
+    ///     The name of the stored procedure
     /// </summary>
     string Name { get; }
+
     /// <summary>
-    /// The name of the parameter whose value will be returned after executing this stored procedure
+    ///     The name of the parameter whose value will be returned after executing this stored procedure
     /// </summary>
     string OutputParameterName { get; }
+
     /// <summary>
-    /// The parameters of the stored procedure
+    ///     The parameters of the stored procedure
     /// </summary>
     DapperParameter DapperParameter { get; }
 }

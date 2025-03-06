@@ -9,7 +9,7 @@ namespace MyReptileFamilyLibrary.SQL;
 public interface IMySQLConnection : IDbConnection, IAsyncDisposable, IComponent
 {
     /// <inheritdoc cref="MySqlConnection.OpenAsync(CancellationToken)" />
-    Task OpenAsync(CancellationToken _p_CancellationToken);
+    Task OpenAsync(CancellationToken CancellationToken);
 
     /// <inheritdoc cref="DbConnection.BeginDbTransactionAsync" />
     ValueTask<MySqlTransaction> BeginDbTransactionAsync();
